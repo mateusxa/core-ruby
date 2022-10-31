@@ -17,7 +17,7 @@ module StarkCore
             def self.check_private_key(pem)
                 EllipticCurve::PrivateKey.fromPem(pem)
                 return pem
-                rescue
+            rescue
                 raise(ArgumentError, 'Private-key must be a valid secp256k1 ECDSA string in pem format')
             end
 
@@ -54,7 +54,7 @@ module StarkCore
                 return Time.new(data.year, data.month, data.day) if data.is_a?(Date)
 
                 data, _type = check_datetime_string(data)
-                data
+                return data
             end
 
             def self.check_date(data)
@@ -72,26 +72,26 @@ module StarkCore
             class << self
                 private
 
-            def check_datetime_string(data)
-            data = data.to_s
+                def check_datetime_string(data)
+                    data = data.to_s
 
-          begin
-            return [DateTime.strptime(data, '%Y-%m-%dT%H:%M:%S.%L+00:00'), 'datetime']
-          rescue ArgumentError
-          end
+                    begin
+                        return [DateTime.strptime(data, '%Y-%m-%dT%H:%M:%S.%L+00:00'), 'datetime']
+                    rescue ArgumentError
+                    end
 
-          begin
-            return [DateTime.strptime(data, '%Y-%m-%dT%H:%M:%S+00:00'), 'datetime']
-          rescue ArgumentError
-          end
+                    begin
+                        return [DateTime.strptime(data, '%Y-%m-%dT%H:%M:%S+00:00'), 'datetime']
+                    rescue ArgumentError
+                    end
 
-          begin
-            return [DateTime.strptime(data, '%Y-%m-%d'), 'date']
-          rescue ArgumentError
-            raise(ArgumentError, 'invalid datetime string ' + data)
-          end
+                    begin
+                        return [DateTime.strptime(data, '%Y-%m-%d'), 'date']
+                    rescue ArgumentError
+                        raise(ArgumentError, 'invalid datetime string ' + data)
+                    end
+                end
+            end
         end
-      end
     end
-  end
 end

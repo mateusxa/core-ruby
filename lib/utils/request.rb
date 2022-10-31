@@ -22,13 +22,20 @@ module StarkCore
         end
       end
 
-      def self.fetch(method:, path:, payload: nil, query: nil, user: nil)
+      def self.fetch(host:, sdk_version:, user:, method:, path:, payload: nil, query: nil, 
+                      api_version: "v2", language: "en-US", timeout: 15)
         user = Checks.check_user(user)
         language = Checks.check_language
 
+        service = {
+          StarkCore::Utils::StarkHost::INFRA => "starkinfra",
+          StarkCore::Utils::StarkHost::BANK => "starkbank",
+          StarkCore::Utils::StarkHost::SIGN => "starksign",
+        }[host]
+
         base_url = {
-          Environment::PRODUCTION => 'https://api.starkbank.com/',
-          Environment::SANDBOX => 'https://sandbox.api.starkbank.com/'
+          Environment::PRODUCTION => "https://api.#{service}.com/",
+          Environment::SANDBOX => "https://sandbox.api.#{service}.com/"
         }[user.environment] + 'v2'
 
         url = "#{base_url}/#{path}#{StarkCore::Utils::URL.urlencode(query)}"
@@ -61,7 +68,7 @@ module StarkCore
         req['Access-Time'] = access_time
         req['Access-Signature'] = signature
         req['Content-Type'] = 'application/json'
-        req['User-Agent'] = "Ruby-#{RUBY_VERSION}-SDK-2.6.0"
+        req['User-Agent'] = "Ruby-#{RUBY_VERSION}-SDK-#{host}-#{sdk_version}"
         req['Accept-Language'] = language
 
         request = Net::HTTP.start(uri.hostname, use_ssl: true) { |http| http.request(req) }

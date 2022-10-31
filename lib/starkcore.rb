@@ -15,3 +15,9 @@ require_relative "utils/url"
 require_relative "environment"
 require_relative "error"
 require_relative "key"
+
+module StarkCore
+    @user = nil
+    @language = 'en-US'
+    class << self; attr_accessor :user, :language; end
+end

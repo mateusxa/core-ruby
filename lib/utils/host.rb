@@ -6,6 +6,8 @@ module StarkCore
             INFRA = "infra"
             BANK = "bank"
             SIGN = "sign"
+
+            public_constant :INFRA, :BANK, :SIGN
         end
     end
 end

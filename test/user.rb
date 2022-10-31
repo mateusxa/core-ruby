@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+
 StarkCore.user = StarkCore::Project.new(
   environment: 'sandbox',
   id: ENV['SANDBOX_ID'], # '9999999999999999',
